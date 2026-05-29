@@ -31,7 +31,7 @@
     "tag": "beta"
   },
   "dependencies": {
-    "@wireweave/sdk": "link:../sdk",
+    "@wireweave/sdk": "^0.1.0-beta.0",
     "commander": "^12.1.0"
   },
   "devDependencies": {
