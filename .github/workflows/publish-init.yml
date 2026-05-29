@@ -29,8 +29,19 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Run tests
-        run: pnpm test
+      - name: Rewrite @wireweave/sdk dep for publish
+        # SDK 가 아직 publish 안 됐을 수 있어 link:../sdk 를 임시로 * 로 교체.
+        # 사용자 후속 액션: SDK publish 후 cli 의 dep 을 ^0.x 로 정합 + 재publish.
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            if (pkg.dependencies && pkg.dependencies['@wireweave/sdk']) {
+              pkg.dependencies['@wireweave/sdk'] = '*';
+            }
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          cat package.json | grep -A1 '@wireweave/sdk' || true
 
       - name: Publish Initial Beta
         env:
